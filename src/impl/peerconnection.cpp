@@ -471,8 +471,10 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		mDataChannels.emplace(stream, channel);
 	}
 	else if (!found) {
-		if (message->type == Message::Reset)
+		if (message->type == Message::Reset) {
+			PLOG_WARNING << "Ignore reset signal: " << stream;
 			return; // ignore
+		}
 
 		// Invalid, close the DataChannel
 		PLOG_WARNING << "Got unexpected message on stream " << stream;
@@ -629,10 +631,16 @@ shared_ptr<DataChannel> PeerConnection::emplaceDataChannel(string label, DataCha
 
 std::pair<shared_ptr<DataChannel>, bool> PeerConnection::findDataChannel(uint16_t stream) {
 	std::shared_lock lock(mDataChannelsMutex); // read-only
+	PLOG_WARNING << "Find channel stream: " << stream;
 	if (auto it = mDataChannels.find(stream); it != mDataChannels.end())
+	{
+		PLOG_WARNING << "Found data channel: " << stream;
 		return std::make_pair(it->second.lock(), true);
-	else
+	}
+	else {
+		PLOG_WARNING << "Not found data channel: " << stream;
 		return std::make_pair(nullptr, false);
+	}
 }
 
 bool PeerConnection::removeDataChannel(uint16_t stream) {
