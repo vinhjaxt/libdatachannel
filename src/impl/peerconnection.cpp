@@ -645,6 +645,7 @@ std::pair<shared_ptr<DataChannel>, bool> PeerConnection::findDataChannel(uint16_
 
 bool PeerConnection::removeDataChannel(uint16_t stream) {
 		std::unique_lock lock(mDataChannelsMutex); // we are going to erase
+		PLOG_WARNING << "Remove datachannel: " << stream;
 		return mDataChannels.erase(stream) != 0;
 }
 
