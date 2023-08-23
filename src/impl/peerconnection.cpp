@@ -483,6 +483,7 @@ void PeerConnection::forwardMessage(message_ptr message) {
 	}
 
 	if (message->type == Message::Reset) {
+		PLOG_WARNING << "Got reset signal: " << stream;
 		// Incoming stream is reset, unregister it
 		removeDataChannel(stream);
 	}
@@ -492,7 +493,7 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		channel->incoming(message);
 	} else {
 		// DataChannel was destroyed, ignore
-		PLOG_DEBUG << "Ignored message on stream " << stream << ", DataChannel is destroyed";
+		PLOG_WARNING << "Ignored message on stream " << stream << ", DataChannel is destroyed";
 	}
 }
 
