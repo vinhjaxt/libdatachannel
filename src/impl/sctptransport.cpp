@@ -406,6 +406,9 @@ bool SctpTransport::flush() {
 void SctpTransport::closeStream(unsigned int stream) {
 	std::lock_guard lock(mSendMutex);
 
+	PLOG_WARNING << "Sending reset signal: " << stream;
+
+
 	// RFC 8831 6.7. Closing a Data Channel
 	// Closing of a data channel MUST be signaled by resetting the corresponding outgoing streams
 	// See https://www.rfc-editor.org/rfc/rfc8831.html#section-6.7
