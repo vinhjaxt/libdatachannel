@@ -477,7 +477,9 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		}
 
 		// Invalid, close the DataChannel
-		PLOG_WARNING << "Got unexpected message on stream " << stream;
+		auto raw = reinterpret_cast<const uint8_t *>(message->data());
+		PLOG_WARNING << "Got unexpected message on stream " << stream << "; type: " << (message->type) << "; data: " << raw;
+
 		sctpTransport->closeStream(message->stream);
 		return;
 	}
@@ -494,7 +496,8 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		channel->incoming(message);
 	} else {
 		// DataChannel was destroyed, ignore
-		PLOG_WARNING << "Ignored message on stream " << stream << ", DataChannel is destroyed";
+		auto raw = reinterpret_cast<const uint8_t *>(message->data());
+		PLOG_WARNING << "Ignored message on stream " << stream << ", DataChannel is destroyed; type: " << (message->type) << "; data: " << raw;
 	}
 }
 
