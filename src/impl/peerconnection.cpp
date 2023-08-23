@@ -683,7 +683,7 @@ void PeerConnection::assignDataChannels() {
 			stream += 2;
 		}
 
-		PLOG_DEBUG << "Assigning stream " << stream << " to DataChannel";
+		PLOG_WARNING << "Assigning stream " << stream << " to DataChannel";
 
 		channel->assignStream(stream);
 		mDataChannels.emplace(std::make_pair(stream, channel));
