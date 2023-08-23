@@ -486,6 +486,7 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		PLOG_WARNING << "Got reset signal: " << stream;
 		// Incoming stream is reset, unregister it
 		removeDataChannel(stream);
+		return;
 	}
 
 	if (channel) {
