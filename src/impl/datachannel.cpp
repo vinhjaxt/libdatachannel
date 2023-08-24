@@ -88,7 +88,8 @@ DataChannel::~DataChannel() {
 
 void DataChannel::close() {
 	PLOG_VERBOSE << "Closing DataChannel";
-	PLOG_WARNING << "Close channel: " << mStream.value();
+	if (mStream.has_value())
+		PLOG_WARNING << "Close channel: " << mStream.value();
 
 	shared_ptr<SctpTransport> transport;
 	{
