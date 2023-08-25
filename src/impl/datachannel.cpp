@@ -87,9 +87,9 @@ DataChannel::~DataChannel() {
 }
 
 void DataChannel::close() {
-	PLOG_WARNING << "Closing DataChannel";
-	// if (mStream.has_value())
-		// PLOG_WARNING << "Close channel: " << mStream.value();
+	PLOG_VERBOSE << "Closing DataChannel";
+	if (mStream.has_value())
+		PLOG_WARNING << "Close channel: " << mStream.value();
 
 	shared_ptr<SctpTransport> transport;
 	{
@@ -97,11 +97,11 @@ void DataChannel::close() {
 		transport = mSctpTransport.lock();
 	}
 
-	if (!mIsClosed.exchange(true)) {
-		if (transport && mStream.has_value())
-			transport->closeStream(mStream.value());
+	if (mIsOpen.exchange(false) && transport && mStream.has_value())
+		transport->closeStream(mStream.value());
+
+	if (!mIsClosed.exchange(true))
 		triggerClosed();
-	}
 
 	resetCallbacks();
 }
@@ -142,7 +142,7 @@ Reliability DataChannel::reliability() const {
 	return *mReliability;
 }
 
-bool DataChannel::isOpen(void) const { return !mIsClosed && mIsOpen; }
+bool DataChannel::isOpen(void) const { return mIsOpen; }
 
 bool DataChannel::isClosed(void) const { return mIsClosed; }
 
