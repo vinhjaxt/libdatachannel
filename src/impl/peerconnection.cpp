@@ -446,7 +446,7 @@ void PeerConnection::forwardMessage(message_ptr message) {
 		if (found) {
 			// The stream is already used, the receiver must close the DataChannel
 			PLOG_WARNING << "Got open message on already used stream " << stream;
-			if(channel && !channel->isClosed())
+			if(channel && channel->isOpen())
 				channel->close();
 			else
 				sctpTransport->closeStream(message->stream);
