@@ -451,6 +451,7 @@ void PeerConnection::forwardMessage(message_ptr message) {
 			else
 				sctpTransport->closeStream(message->stream);
 
+			removeDataChannel(stream);
 			return;
 		}
 
